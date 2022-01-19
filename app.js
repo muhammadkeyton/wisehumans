@@ -310,29 +310,40 @@ app.post("/submit",(req,res)=>{
   const currentUser = req.user
 
   if(req.isAuthenticated()){
-    if(currentUser.username){
-      currentUser.posts.push({title:req.body.title,content:req.body.content,currentUser:currentUser.username});
-    }else if(currentUser.name){
-      currentUser.posts.push({title:req.body.title,content:req.body.content,currentUser:currentUser.name});
 
-    }else{
-      currentUser.posts.push({title:req.body.title,content:req.body.content,currentUser:currentUser.displayName});
-    }
+    if(req.body.title && req.body.content){
 
-    // currentUser.posts.push({title:req.body.title,content:req.body.content,currentUser:req.user});
-    currentUser.save((err)=>{
-      if(err){
-        console.log(err);
+
+      if(currentUser.username){
+        currentUser.posts.push({title:req.body.title,content:req.body.content,currentUser:currentUser.username});
+      }else if(currentUser.name){
+        currentUser.posts.push({title:req.body.title,content:req.body.content,currentUser:currentUser.name});
+
       }else{
-        console.log("successfully added post for the current user");
+        currentUser.posts.push({title:req.body.title,content:req.body.content,currentUser:currentUser.displayName});
       }
 
-    })
-    res.redirect("/all-quotes")
+      // currentUser.posts.push({title:req.body.title,content:req.body.content,currentUser:req.user});
+      currentUser.save((err)=>{
+        if(err){
+          console.log(err);
+        }else{
+          console.log("successfully added post for the current user");
+        }
+
+      })
+      res.redirect("/all-quotes")
+
+    }else{
+      res.redirect("/submit")
+    }
+
 
   }else{
     res.redirect("/sign-in")
   }
+
+  
 });
 
 
