@@ -1,0 +1,55 @@
+<%- include('partials/header') -%>
+<body>
+<section class="bottom">
+<h1 class="heading"> <%= method %> with your preferred method</h1>
+
+<div id="sign-in" class="sign-in-container">
+<div class="card grid-sec">
+  <h4 class="sign-in-heading"> <%= method %> with credentials</h4>
+<form action="/<%=route%>" method="post">
+  <% if(message.length > 3){ %>
+    <p style="color:red;"><%= message %></p>
+  <%}%>
+  <div class="mb-3">
+  <label for="exampleInputEmail1" class="form-label">Email address</label>
+  <input type="email" class="form-control" name="username" aria-describedby="emailHelp">
+  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+  </div>
+  <div class="mb-3">
+  <label for="exampleInputPassword1" class="form-label">Password</label>
+  <input type="password" class="form-control" name="password">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+
+<div class="line grid-sec">
+  <div class="grid-sec vertical-line"></div>
+  <div class="grid-sec"><h1>or</h1></div>
+  <div class="grid-sec vertical-line"></div>
+</div>
+
+
+<div class="card  grid-sec">
+  <h4 class="sign-in-heading">social account <%= method %></h4>
+
+  <div class="google">
+  <a href="/auth/google" class="btn btn-block btn-social btn-google"><i class="fab fa-google"></i> <%= method %> with Google</a></div>
+  <br>
+  <div class="facebook">
+  <a href="/auth/facebook" class="btn btn-block btn-social btn-facebook"><i class="fab fa-facebook"></i> <%= method %> with Facebook</a></div>
+  <br>
+  <!-- <div class="instagram">
+  <a href="/auth/instagram" class="btn btn-block btn-social btn-instagram"><i class="fab fa-instagram"></i> <%= method %> with instagram</a></div>
+
+</div> -->
+
+
+</div>
+
+</section>
+
+</body>
+
+<%- include('partials/footer') -%>

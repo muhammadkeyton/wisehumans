@@ -1,0 +1,9 @@
+/node_modules
+npm-debug.log
+.DS_Store
+/*.env
+
+/*sign-in.html
+/*quotes.html
+/*post.html
+/*index.html

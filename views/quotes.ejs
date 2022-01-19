@@ -1,0 +1,74 @@
+<%- include('partials/header') -%>
+<body>
+  <!-- navbar -->
+
+
+    <nav class="navbar navbar-expand-lg  navbar-light">
+      <div class="container-fluid">
+        <a class="navbar-brand">Wise Humans</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="/log-out">Log out</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/submit">Post your Quote</a>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+  </nav>
+
+  <h1 class="quote-heading">All posted Quotes</h1>
+
+
+
+
+    <div class="quotes">
+      <% wiseUsers.forEach((user) => { %>
+        <% for (let i = 0; i < user.posts.length ; i++) { %>
+            <div class="quote-card card">
+                <div class="card-body">
+
+                  <h5 class="card-title"><%= user.posts[i].title %></h5>
+                  <p class="card-text"><%= user.posts[i].content %></p>
+                    <h6 class="card-subtitle mb-2 text-muted">Posted by:<%= user.posts[i].currentUser %></h6>
+                </div>
+            </div>
+          <%}%>
+        <% }); %>
+    </div>
+
+
+
+  <!-- <div class="quotes">
+
+      <div class="quote-card card">
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <p class="card-text"></p>
+            <h6 class="card-subtitle mb-2 text-muted"></h6>
+          </div>
+      </div>
+
+
+
+
+
+
+
+
+  </div> -->
+
+
+
+
+
+<!-- bootstrap js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+<%- include('partials/footer') -%>
