@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -33,6 +34,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+//using flash to display error messages and more
 app.use(flash());
 
 //connecting to mongodb database
@@ -208,9 +210,14 @@ app.post('/', function(req, res, next) {
         });
 
       }else{
-        // console.log("user not in database");
-        req.flash("info",`${req.body.username} was not found in our database! please sign up instead.`)
-        res.render("sign-in-up",{method:"Sign up",route:"sign-up",message:req.flash('info')[0]})
+        if(req.body.username && req.body.password){
+          req.flash("info",`${req.body.username} was not found in our database! please sign up instead.`)
+          res.render("sign-in-up",{method:"Sign up",route:"sign-up",message:req.flash('info')[0]})
+        }else{
+            req.flash("info","you can't login without entering your credentials.")
+            res.render("home",{message:req.flash('info')[0]})
+        }
+
       }
 
     }
@@ -221,7 +228,7 @@ app.post('/', function(req, res, next) {
 
 
 
-
+//signing in existing users and doing some validation
 app.post("/sign-in",(req,res)=>{
   const wiseHuman = new wiseHumans({
     username:req.body.username,
@@ -256,9 +263,15 @@ app.post("/sign-in",(req,res)=>{
         });
 
       }else{
-        // console.log("user not in database");
-        req.flash("info",`${req.body.username} was not found in our database! please sign up instead.`)
-        res.render("sign-in-up",{method:"Sign up",route:"sign-up",message:req.flash('info')[0]})
+        //
+        if(req.body.username && req.body.password){
+          req.flash("info",`${req.body.username} was not found in our database! please sign up instead.`)
+          res.render("sign-in-up",{method:"Sign up",route:"sign-up",message:req.flash('info')[0]})
+        }else{
+            req.flash("info","you can't login without entering your credentials.")
+            res.render("sign-in-up",{method:"Sign in",route:"sign-in",message:req.flash('info')[0]})
+        }
+
       }
 
     }
@@ -269,6 +282,8 @@ app.post("/sign-in",(req,res)=>{
 
 });
 
+
+//signing up new users if they don't exist in the database
 app.post("/sign-up",(req,res)=>{
 
   wiseHumans.findOne({username:req.body.username}, function (err,foundUser){
@@ -280,17 +295,24 @@ app.post("/sign-up",(req,res)=>{
         req.flash("info",` an account for ${req.body.username} already exists! please sign in instead.`)
         res.render("home",{message:req.flash('info')[0]})
       }else{
-        wiseHumans.register({username:req.body.username},req.body.password,function(err,user){
-          if(err){
-            console.log(err);
-            res.redirect("sign-up")
-          }else{
-            passport.authenticate("local")(req,res,function(){
-              res.redirect("/all-quotes")
-            });
-          }
+        if(req.body.username && req.body.password){
+          wiseHumans.register({username:req.body.username},req.body.password,function(err,user){
+            if(err){
+              console.log(err);
+              res.redirect("sign-up")
+            }else{
+              passport.authenticate("local")(req,res,function(){
+                res.redirect("/all-quotes")
+              });
+            }
 
-        });
+          });
+
+        }else{
+          req.flash("info","you need to provide data for both fields.")
+          res.render("sign-in-up",{method:"Sign up",route:"sign-up",message:req.flash('info')[0]})
+        }
+
 
 
       }
@@ -313,7 +335,7 @@ app.post("/submit",(req,res)=>{
 
     if(req.body.title && req.body.content){
 
-
+      //checking what method the user signed or upwith and then getting their posts together with the current authenticated user
       if(currentUser.username){
         currentUser.posts.push({title:req.body.title,content:req.body.content,currentUser:currentUser.username});
       }else if(currentUser.name){
@@ -343,13 +365,13 @@ app.post("/submit",(req,res)=>{
     res.redirect("/sign-in")
   }
 
-  
+
 });
 
 
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 8000;
+  port = 3000;
 }
 
 app.listen(port,(req,res)=>{
